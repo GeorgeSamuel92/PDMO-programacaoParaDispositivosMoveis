@@ -1,23 +1,16 @@
 import React, { useState } from "react";
 import { StatusBar } from "expo-status-bar";
-import {
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 
 import api from "./src/services/api/api";
 
 export default function App() {
   const [cliente, setCliente] = useState([]);
-  const [idCli, setIdCli] = useState(0);
 
-  const getCliente = async (id) => {
+  const getCliente = async () => {
     try {
-      const { data } = await api.get(`/clientes/${id}`);
-      console.log(data);
+      const { data } = await api.get(`/clientes/17`);
+      console.log(data)
       setCliente(data);
     } catch (error) {
       console.log(error);
@@ -27,13 +20,16 @@ export default function App() {
   return (
     <View style={styles.container}>
       <TextInput
-        style={styles.texinput}
-        placeholder="Id Cliente"
-        onChangeText={setIdCli}
-        value={idCli}
-      ></TextInput>
+      style={styles.texInput}
+      >
 
-      <TouchableOpacity onPress={() => getCliente(idCli)} style={styles.botao}>
+      </TextInput>
+
+
+      <TouchableOpacity 
+      onPress={() => getCliente()} 
+      style={styles.botao}
+      >
         <Text style={{ color: "white" }}>pressione para pesquisar</Text>
       </TouchableOpacity>
 
@@ -54,20 +50,18 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   botao: {
-    alignItems: "center",
+    alingItens: "center",
     justifyContent: "center",
-    width: "70%",
+    width: "80%",
     height: 40,
     borderRadius: 4,
     backgroundColor: "red",
   },
-  texinput: {
-    width: "80%",
-    height: 40,
+  texinput:{
     borderWidth: 1,
     borderColor: "black",
     borderRadius: 5,
     padding: 5,
-    marginBottom: 10,
   },
+
 });
