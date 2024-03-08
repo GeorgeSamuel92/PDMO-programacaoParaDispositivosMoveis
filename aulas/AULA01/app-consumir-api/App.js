@@ -15,8 +15,6 @@ export default function App() {
   const [cliente, setCliente] = useState([]);
   const [idCli, setIdCli] = useState(0);
   const [showAlert, setShowAlert] = useState(false);
-  
-  const [msgAlert, setMsgAlert] = useState(null); //
 
   const getCliente = async (id) => {
     try {
@@ -49,17 +47,6 @@ export default function App() {
       } else {
         setCliente([]);
       }
-
-      //
-      if (response != null) {
-        if(response.data.length === null){
-          setCliente([])
-          setShowAlert(true)
-        }else {
-          setCliente(response.data)
-        }
-      }
-      //
 
     } catch (error) {
       console.log(error);
