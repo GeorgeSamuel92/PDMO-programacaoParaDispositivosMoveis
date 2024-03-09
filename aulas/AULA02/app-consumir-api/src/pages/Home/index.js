@@ -10,10 +10,15 @@ export default function App() {
         navigation.navigate('DetalhesCliente');
     }
 
+    const navegaNovoClietne= () => {
+        navigation.navigate('NovoCliente');
+    }
+
     return (
         <SafeAreaView style={styles.container}>
             <Text> Ola! </Text>
-            <Button title='Abrir pesquisa por ID' onPress={navegapesquisaID} >Clique</Button>
+            <Button title='Abrir pesquisa por ID' onPress={navegapesquisaID} style={styles.botao} />
+            <Button title='Cadastrar novo cliente' onPress={navegaNovoClietne} />
         </SafeAreaView>
     )
 }
@@ -25,6 +30,16 @@ const styles = StyleSheet.create({
       backgroundColor: "#fff",
       alignItems: "center",
       justifyContent: "center",
+    },
+    botao: {
+        alignItems: "center",
+        justifyContent: "center",
+        width: "70%",
+        height: 40,
+        borderRadius: 4,
+        backgroundColor: "red",
+        marginTop: 20,
+        marginBottom: 20
     },
 
   });

@@ -7,6 +7,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context"
 
 import Home from './src/pages/Home';
 import DetalhesCliente from './src/pages/DetalhesCliente';
+import NovoCliente from "./src/pages/NovoCliente";
 
 const Stack = createNativeStackNavigator();
 
@@ -25,7 +26,18 @@ export default function App() {
           <Stack.Screen
             name='DetalhesCliente'
             component = {DetalhesCliente}
+            options={{
+              title: 'Detalhes do cliente',
+            }}
             />
+
+          <Stack.Screen 
+          name = 'NovoCliente'
+          component = {NovoCliente}
+          options={{
+            title: 'Novo cliente',
+          }}
+          />
 
         </Stack.Navigator>
       </NavigationContainer>
