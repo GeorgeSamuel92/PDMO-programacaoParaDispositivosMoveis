@@ -1,94 +1,36 @@
-import React, { useState } from "react";
 import { StatusBar } from "expo-status-bar";
-import {
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-  Alert
-} from "react-native";
+import { StyleSheet } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { SafeAreaProvider } from "react-native-safe-area-context"
 
-import api from "./src/services/api/api";
+
+import Home from './src/pages/Home';
+import DetalhesCliente from './src/pages/DetalhesCliente';
+
+const Stack = createNativeStackNavigator();
 
 export default function App() {
-  const [cliente, setCliente] = useState([]);
-  const [idCli, setIdCli] = useState(0);
-  const [showAlert, setShowAlert] = useState(false);
-
-  const getCliente = async (id) => {
-    try {
-      if (id > 0) {
-        const response = { data } = await api.get(`/clientes/${id}`)
-          .catch(function (error) {
-            if (error.response) {
-              console.log(error.response.data);
-              console.log(error.response.status);
-              console.log(error.response.headers);
-            } else if (error.resquest) {
-              if (error.resquest._response.includes("Falied")) {
-                console.log("Erro ao conectar com a API");
-              }
-            } else {
-              console.log("Error", error.message);
-            }
-            console.log(error.mensagem)
-          });
-
-          if (response != undefined) {
-            if(response.data.length === 0){
-              setCliente([])
-              setShowAlert(true)
-            }else {
-              setCliente(response.data)
-            }
-          }
-
-      } else {
-        setCliente([]);
-      }
-
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   return (
-    <View style={styles.container}>
-      <TextInput
-        style={styles.texInput}
-        placeholder="ID Cliente"
-        keyboardType="numeric"
-        onChangeText={setIdCli}
-        value={idCli}
-      ></TextInput>
+    <SafeAreaProvider>
+      <NavigationContainer>
+        <Stack.Navigator>
 
-      <TouchableOpacity onPress={() => getCliente(idCli)} style={styles.botao}>
-        <Text style={{ color: "white" }}>pressione para pesquisar</Text>
-      </TouchableOpacity>
+          <Stack.Screen
+          name = 'Home'
+          component = {Home}
+          />
 
-      <Text>ID: </Text>
-      <TextInput
-        style={styles.texInput}
-        value={cliente[0]?.id.toString()}
-      ></TextInput>
-      <Text>Nome: </Text>
-      <TextInput style={styles.texInput} value={cliente[0]?.nome}></TextInput>
-      <Text>Idade: </Text>
-      <TextInput
-        style={styles.texInput}
-        value={cliente[0]?.idade.toString()}
-      ></TextInput>
+          <Stack.Screen
+            name='DetalhesCliente'
+            component = {DetalhesCliente}
+            />
 
-      {showAlert &&
-        Alert.alert(
-          "Informação", "Esse registro não foi localizado na base de dados",
-          [
-            { text: "ok", onPress: () => setShowAlert(false) }
-          ])}
-      <StatusBar style="auto" />
-    </View>
-  );
+        </Stack.Navigator>
+      </NavigationContainer>
+    </SafeAreaProvider>
+  )
 }
 
 const styles = StyleSheet.create({
@@ -98,22 +40,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  botao: {
-    alignItems: "center",
-    justifyContent: "center",
-    width: "70%",
-    height: 40,
-    borderRadius: 4,
-    backgroundColor: "red",
-  },
-  texInput: {
-    width: "80%",
-    height: 40,
-    borderWidth: 1,
-    borderColor: "black",
-    borderRadius: 5,
-    padding: 5,
-    marginBottom: 10,
-    textAlign: "center",
-  },
+
 });
