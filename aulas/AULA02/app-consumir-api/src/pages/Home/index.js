@@ -14,11 +14,16 @@ export default function App() {
         navigation.navigate('NovoCliente');
     }
 
+    const navegaTodosClietne= () => {
+        navigation.navigate('TodosClientes');
+    }
+
     return (
         <SafeAreaView style={styles.container}>
             <Text> Ola! </Text>
             <Button title='Abrir pesquisa por ID' onPress={navegapesquisaID} style={styles.botao} />
-            <Button title='Cadastrar novo cliente' onPress={navegaNovoClietne} />
+            <Button title='Cadastrar novo cliente' onPress={navegaNovoClietne} style= {styles.botao}/>
+            <Button title='Exibir todos os cliente' onPress={navegaTodosClietne} style={styles.botao} />
         </SafeAreaView>
     )
 }

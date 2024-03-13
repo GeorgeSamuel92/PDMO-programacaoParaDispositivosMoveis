@@ -1,15 +1,6 @@
 import React, { useState } from "react";
 import { StatusBar } from "expo-status-bar";
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  SafeAreaView,
-  TextInput,
-  Alert,
-  Button,
-} from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView, TextInput, Alert,Button } from "react-native";
 
 import api from "../../services/api/api";
 
@@ -25,7 +16,7 @@ export default function NovoCliente() {
   };
   const salvarCliente = async () => {
     try {
-      if (nome == "" || idade == "" || nome == null) {
+      if (nome == " " || idade == " " || nome == null) {
         setAlertMessage("Preencha corretamente o nome");
         exibeAlert(true);
         return;
