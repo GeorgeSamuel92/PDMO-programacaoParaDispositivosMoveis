@@ -9,6 +9,7 @@ import Home from './src/pages/Home';
 import DetalhesCliente from './src/pages/DetalhesCliente';
 import NovoCliente from "./src/pages/NovoCliente";
 import TodosClientes from "./src/pages/TodosClientes";
+import EditarClientes from "./src/pages/EditarClientes";
 
 const Stack = createNativeStackNavigator();
 
@@ -47,6 +48,7 @@ export default function App() {
             title: 'Todos clientes',
           }}
           />
+
 
         </Stack.Navigator>
       </NavigationContainer>
