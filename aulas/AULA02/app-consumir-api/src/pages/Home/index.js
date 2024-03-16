@@ -1,36 +1,34 @@
 import React, { useState } from "react";
-import { StatusBar } from "@react-navigation/native"
-import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView, TextInput, Alert,Button } from "react-native";
+import { StatusBar } from "expo-status-bar";
+import { StyleSheet, Text, View, TouchableOpacity, TextInput, Alert,Button } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function App() {
+export default function Home() {
 
     const navigation = useNavigation();
-    const navegapesquisaID = () => {
+
+    const navegaPesquisaClienteId = () => {
         navigation.navigate('DetalhesCliente');
     }
-
-    const navegaNovoClientes= () => {
+    const inserirNovoClientes= () => {
         navigation.navigate('NovoCliente');
     }
 
-    const navegaTodosClientes= () => {
+    const listarTodosClientes= () => {
         navigation.navigate('TodosClientes');
-    }
-
-    const navegaEditarClientes= () => {
-        navigation.navigate('EditarClientes');
     }
 
     return (
         <SafeAreaView style={styles.container}>
-            <Text> Ola! </Text>
-            <Button title='Abrir pesquisa por ID' onPress={navegapesquisaID} style={styles.botao} />
-            <Button title='Cadastrar novo cliente' onPress={navegaNovoClientes} style= {styles.botao}/>
-            <Button title='Exibir todos os cliente' onPress={navegaTodosClientes} style={styles.botao} />
+            <Text> Tela HOME </Text>
+
+            <Button title='Abrir pesquisa por ID' onPress={navegaPesquisaClienteId} style={styles.botao} />
+            <Button title='Cadastrar novo cliente' onPress={inserirNovoClientes} style= {styles.botao}/>
+            <Button title='Exibir todos os cliente' onPress={listarTodosClientes} style={styles.botao} />
         </SafeAreaView>
     )
-}
+};
 
 
 const styles = StyleSheet.create({
@@ -41,6 +39,7 @@ const styles = StyleSheet.create({
       justifyContent: "center",
       gap: 10,
     },
+    
     botao: {
         alignItems: "center",
         justifyContent: "center",

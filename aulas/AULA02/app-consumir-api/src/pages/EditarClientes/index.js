@@ -1,21 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  SafeAreaView,
-  TextInput,
-  Alert,
-  Button,
-} from "react-native";
-import api from "../../services/api/api";
-import { safeAreaView } from "react-native-safe-area-context";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { StyleSheet, Text, View, TouchableOpacity, TextInput, Alert, Button } from "react-native";
+import { useNavigation, useRoute, StackActions } from "@react-navigation/native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
+import api from "../../services/api/api";
 
 export default function EditarCliente() {
+  const navigation = useNavigation();
   const route = useRoute();
 
   const [txtId, setTxtId] = useState(route.params?.id);
@@ -25,132 +17,156 @@ export default function EditarCliente() {
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
 
-  const exibeAlert = () => {
+ 
+
+  const handleShowAlert = () => {
     setShowAlert(true);
   };
-  const editarCliente = async () => {
+  
+  const editarCliente = async (id) => {
     try {
+      console.log(txtNome, txtIdade);
+
       if (txtNome == " "  || txtNome == null) {
         setAlertMessage("Preencha corretamente o nome");
-        exibeAlert(true);
+        handleShowAlert();
         return;
       }
-      if (isNaN(txtIdade)) {
+      if (isNaN(Number(txtIdade))) {
         setAlertMessage("Preencha uma idade valida");
-        exibeAlert(true);
+        handleShowAlert();
         return;
       }
       if (txtIdade == null || txtIdade== ("") || txtIdade < 1) {
         setAlertMessage("Preencha uma idade valida");
-        exibeAlert(true);
+        handleShowAlert();
         return;
       }
 
-      const response = await api.put(`/clientes/${txtId}`, {
-          nome: txtNome,
-          idade: Number(txtIdade),
-        })
+      const response = await api.put(`/clientes/${txtId}`, {nome: txtNome, idade: Number(txtIdade) })
         .catch(function (error) {
           if (error.response) {
-            console.log(error.response.data);
-            console.log(error.response.status);
-            console.log(error.response.headers);
+            console.error(error.response.data);
+            console.error(error.response.status);
+            console.error(error.response.headers);
           } else if (error.resquest) {
-            if (error.resquest._response.includes("Failed")) {
-              console.log("Erro ao conectar com a API");
+            if ((error.resquest._response).includes("Failed")) {
+              console.error("Erro ao conectar com a API");
             }
-          } else {
-            console.log(error.message);
-          }
-          console.log(error.confing);
-        });
 
+          } else {
+            console.log('Error',error.message);
+          }
+          // console.log(error.confing);
+        });
+      console.log((response));
       if (response != undefined) {
-        if (response.data[0].onChangeRows == 1) {
-          setAlertMessage("Cliente alterado com sucesso");
-          exibeAlert();
+        if (response.data[0].changedRows == 1) {
           setTxtId('');
           setTxtNome("");
           setTxtIdade("");
+          setAlertMessage("Cliente alterado com sucesso");
+          handleShowAlert();
         } else {
-          console.log(
-            "O registro não foi alterado, verifique os dados e tente novamente"
-          );
+          setAlertMessage(
+            "O registro não foi alterado, verifique os dados e tente novamente");
+            handleShowAlert();
         }
       }
-    } catch (error) {
+    }
+     catch (error) {
       console.log(error);
     }
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.cardTitle}>
-        <Text style={styles.title}>Cadastrar novo cliente</Text>
-      </View>
+
+      <View style={{width: '80%' }}>
+        <View style={styles.cardTitle}>
+          <Text style={styles.title}>Cadastrar novo cliente</Text>
+        </View>
       
-      <Text> ID</Text>
-      <TextInput
-        style={styles.caixaTexto}
-        value={txtId.toString()}
-        onChangeText={setTxtId}
-        readOnly
-      />
+        <Text> ID</Text>
+        <TextInput
+          style={styles.caixaTexto}
+          value={txtId.toString()}
+          onChangeText={setTxtId}
+          readOnly
+        />
 
-      <Text> Nome: do cliente:</Text>
-      <TextInput
-        style={styles.caixaTexto}
-        value={txtNome}
-        onChangeText={setTxtNome}
-      />
+        <Text> Nome: do cliente:</Text>
+        <TextInput
+          style={styles.caixaTexto}
+          value={txtNome}
+          onChangeText={setTxtNome}
+        />
 
-      <Text> idade do Cliente </Text>
-      <TextInput
-        style={styles.caixaTexto}
-        value={txtIdade.toString()}
-        onChangeText={setTxtIdade}
-      />
+        <Text> idade do Cliente </Text>
+        <TextInput
+          style={styles.caixaTexto}
+          value={txtIdade.toString()}
+          onChangeText={setTxtIdade}
+        />
+      </View>
 
       <TouchableOpacity
-        onPress={() => {
-          editarCliente();
-        }}
-        style={styles.alingVH}
-      >
-        <Text>Salvar</Text>
+                onPress={() => {
+                    editarCliente()
+                }}
+                style={[styles.alignVH, { width: '80%', height: 40, borderColor: 'black', backgroundColor: 'blue', borderRadius: 4 }]}>
+                <Text style={{ color: 'white' }}>Salvar</Text>
       </TouchableOpacity>
 
-      {showAlert &&
-        Alert.alert("Atenção", alertMessage, [
-          { text: "OK", onPress: () => setShowAlert(false) },
-        ])}
+      {showAlert && (Alert.alert(
+        "Atenção",
+         alertMessage, 
+         [
+          { 
+            text: "OK", onPress: () => {
+              setShowAlert(false) 
+            },
+          }
+        ],
+        { cancelable: false }
+        ))}
+        <StatusBar style='auto' />
     </SafeAreaView>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "center",
+    // justifyContent: "center",
     gap: 10,
+    backgroundColor: "#fff",
   },
   alingVH: {
-    alignItems: "center",
-    justifyContent: "center",
-    width: "70%",
-    height: 40,
-    borderRadius: 4,
-    backgroundColor: "red",
-    marginTop: 20,
-    marginBottom: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    // alignItems: "center",
+    // justifyContent: "center",
+    // width: "70%",
+    // height: 40,
+    // borderRadius: 4,
+    // backgroundColor: "red",
+    // marginTop: 20,
+    // marginBottom: 20,
   },
   caixaTexto: {
     borderWidth: 1,
     borderColor: "black",
     borderRadius: 5,
     padding: 5,
-    width: "80%",
+  },
+  alingLeft: {
+    alignItems: 'center',
+        justifyContent: 'center',
+        width: '80%',
+        alignSelf: 'auto',
+        paddingLeft: 45
   },
   cardTitle: {
     paddingBottom: 30,

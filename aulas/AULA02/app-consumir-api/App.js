@@ -9,7 +9,7 @@ import Home from './src/pages/Home';
 import DetalhesCliente from './src/pages/DetalhesCliente';
 import NovoCliente from "./src/pages/NovoCliente";
 import TodosClientes from "./src/pages/TodosClientes";
-import EditarClientes from "./src/pages/EditarClientes";
+import EditarCliente from "./src/pages/EditarClientes";
 
 const Stack = createNativeStackNavigator();
 
@@ -46,6 +46,13 @@ export default function App() {
           component = {TodosClientes}
           options={{
             title: 'Todos clientes',
+          }}
+          />
+          <Stack.Screen 
+          name = 'EditarCliente'
+          component = {EditarCliente}
+          options={{
+            title: 'Editar cliente',
           }}
           />
 
