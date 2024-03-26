@@ -32,7 +32,7 @@ export default function App() {
    * Função dentro do useEffect que cria a tabela caso ela não exista
    */
   useEffect(() => {
-    db.transaction((tx) => {
+    db.transaction(tx => {
       tx.executeSql(
         "CREATE TABLE IF NOT EXISTS clientes (id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT NOT NULL)",
         [], //[]: Este é o array de parâmetros. Como não estamos usando nenhum parâmetro na consulta SQL, deixamos esse array vazio.
@@ -41,7 +41,7 @@ export default function App() {
         (_, error) => console.error(error) //retorno de  erro
       );
     }, null);
-  }, []);
+  }, [todos]);
 
   /**
    * Função utilizada para atualizar os registros
@@ -89,7 +89,7 @@ export default function App() {
           [inputText],
           (_, { rowsAffected }) => {
             console.log(rowsAffected);
-            setInputText("");
+            setInputText(" ");
             atualizaRegistros();
           },
           (_, error) => {
@@ -98,16 +98,20 @@ export default function App() {
           }
         );
       });
-
-    } else if (operacao === "editar") {
+    } else if (operacao === "Editar") {
       db.transaction((tx) => {
         tx.executeSql(
           "UPDATE clientes SET nome = ? WHERE id = ?",
-          [inputText],
+          [inputText, id],
           (_, { rowsAffected }) => {
-            console.log(rowsAffected);
+            if (rowsAffected === 1)
+              Alert.alert("Sucesso", "Cliente atualizado com sucesso");
+            else if (rowsAffected === 0)
+              Alert.alert("Alerta", "Nenhum registro foi alterado");
+
             setInputText("");
             atualizaRegistros();
+            setOperacao("incluir");
           },
           (_, error) => {
             console.error("Erro ao adicionar cliente:", error);
@@ -116,7 +120,7 @@ export default function App() {
         );
       });
     }
-    
+
     db.transaction((tx) => {
       tx.executeSql(
         "UPDATE clientes SET nome =? WHERE id =?",
@@ -131,39 +135,71 @@ export default function App() {
           Alert.alert("Erro", "Ocorreu um erro ao atualizar o cliente.");
         }
       );
-    })
+    });
 
-    /**
-     * Função excluir registro
-     */
-    const excluiCliente = (id) => {
-      db.transaction((tx) => {
-        tx.executeSql(
-          "DELETE FROM clientes WHERE id = ?",
-          [id],
-          (_, { rowsAffected }) => {
-            if (rowsAffected > 0) {
-              atualizaRegistros();
-              Alert.alert("Sucesso", "Cliente excluído com sucesso");
-            } else {
-              Alert.alert(
-                "Error",
-                "Registro não execcultado, verifique e tante novamente"
-              );
-            }
-          },
-          (_, error) => {
-            console.log("Erro ao excluir cliente:", error);
-            Alert.alert("Erro", "Ocorreu um erro ao excluir o cliente");
+  };
+
+  const excluiCliente = (id) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        "DELETE FROM clientes WHERE id = ?",
+        [id],
+        (_, { rowsAffected }) => {
+          if (rowsAffected > 0) {
+            atualizaRegistros();
+            Alert.alert("Sucesso", "Cliente excluído com sucesso");
+          } else {
+            Alert.alert(
+              "Error",
+              "Registro não execcultado, verifique e tante novamente"
+            );
           }
-        );
-      });
-    };
+        },
+        (_, error) => {
+          console.log("Erro ao excluir cliente:", error);
+          Alert.alert("Erro", "Ocorreu um erro ao excluir o cliente");
+        }
+      );
+    });
+  };
+  // função de edição do cliente
+  const buttonPress = (nome) => {
+    setInputText(nome);
+  };
 
-    // função de edição do cliente
-    const buttonPress = (nome) => {
-      setInputText(nome);
-    };
+  /**
+   * Função atualizar para excluir tabelas e banco
+   */
+
+  const deleteDatabase = () => {
+    db.transaction(tx => {
+      
+      tx.executeSql(
+        "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'",
+        [],
+        (_, { rows }) => {
+          rows._array.forEach(table => {
+            
+            
+            tx.executeSql(
+              `DROP TABLE IF EXISTS ${table.name}`,
+              [],
+              () => {
+                console.log(`Tabela ${table.name} excluída com sucesso!`);
+                setTodos([]);
+              },
+              (_, error) => {
+                console.log(`Erro ao excluir tabela ${table.name}:`, error);
+                Alert.alert(
+                  "Erro",
+                  `Ocorreu um erro ao excluir a tabela ${table.name}`
+                );
+              }
+            );
+          });
+        }
+      );
+    });
   };
 
   return (
@@ -178,13 +214,17 @@ export default function App() {
           />
 
           <Button
-            title="Adicionar"
+            title={
+              operacao === "incluir"
+                ? "Salvar Novo Registro"
+                : "Salvar Alteração"
+            }
             onPress={incluiCliente}
-            style={styles.button}
           />
 
           <Text style={styles.title}>Clientes Cadastrados</Text>
         </View>
+
         <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
           <View style={styles.containerScroll}>
             {/* A propriedade key é usada pelo React para identificar de forma única cada elemento na lista, o que é crucial para que o React possa otimizar a renderização e o desempenho. */}
@@ -196,26 +236,17 @@ export default function App() {
                 <View style={styles.buttonTable}>
                   <TouchableOpacity
                     onPress={() => {
-                      {
-                        (" ");
-                      }
-                      {
-                        buttonPress(cliente.nome),
-                          setId(cliente.id),
-                          setOperacao("Editar");
-                      }
-                      <FontAwesome6
-                        name="pen-to-square"
-                        size={24}
-                        color="blue"
-                      />;
+                      buttonPress(cliente.nome),
+                        setId(cliente.id),
+                        setOperacao("Editar");
                     }}
-                  ></TouchableOpacity>
+                  >
+                    <FontAwesome6 name="pen-to-square" size={24} color="blue" />
+                  </TouchableOpacity>
 
                   {/* Dentro do onPress do botão, colocamos um alert perguntando ao usuário se deseja excluir o registro selecionado */}
-                  
+
                   <TouchableOpacity
-                    title="Excluir"
                     onPress={() => {
                       Alert.alert(
                         "Atenção!",
@@ -235,18 +266,35 @@ export default function App() {
                       );
                     }}
                   >
-                    <FontAwesome6
-                    name="trash"
-                    size={24}
-                    color="red" />
-
+                    <FontAwesome6 name="trash" size={24} color="red" />
                   </TouchableOpacity>
-
                 </View>
               </View>
             ))}
           </View>
         </ScrollView>
+        <TouchableOpacity
+          onPress={() => {
+            Alert.alert(
+              "Atenção!",
+              "Deseja excluir o Banco de dados do Sistema? Essa ação não pode ser desfeita!",
+              [
+                {
+                  text: "OK",
+                  onPress: () => deleteDatabase(),
+                },
+                {
+                  text: "Cancelar",
+                  onPress: () => {
+                    return;
+                  },
+                },
+              ]
+            );
+          }}>
+          <FontAwesome6 name="eraser" size={50} color="red" />
+        </TouchableOpacity>
+
       </SafeAreaView>
     </SafeAreaProvider>
   );
@@ -304,5 +352,6 @@ const styles = StyleSheet.create({
   bottonTable: {
     flexDirection: "row",
     gap: 15,
+    
   },
 });
