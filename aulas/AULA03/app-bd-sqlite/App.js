@@ -32,7 +32,7 @@ export default function App() {
    * Função dentro do useEffect que cria a tabela caso ela não exista
    */
   useEffect(() => {
-    db.transaction(tx => {
+    db.transaction((tx) => {
       tx.executeSql(
         "CREATE TABLE IF NOT EXISTS clientes (id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT NOT NULL)",
         [], //[]: Este é o array de parâmetros. Como não estamos usando nenhum parâmetro na consulta SQL, deixamos esse array vazio.
@@ -136,8 +136,11 @@ export default function App() {
         }
       );
     });
-
   };
+
+  /**
+   * Função excluir registro
+   */
 
   const excluiCliente = (id) => {
     db.transaction((tx) => {
@@ -172,15 +175,12 @@ export default function App() {
    */
 
   const deleteDatabase = () => {
-    db.transaction(tx => {
-      
+    db.transaction((tx) => {
       tx.executeSql(
         "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'",
         [],
         (_, { rows }) => {
-          rows._array.forEach(table => {
-            
-            
+          rows._array.forEach((table) => {
             tx.executeSql(
               `DROP TABLE IF EXISTS ${table.name}`,
               [],
@@ -291,10 +291,10 @@ export default function App() {
                 },
               ]
             );
-          }}>
+          }}
+        >
           <FontAwesome6 name="eraser" size={50} color="red" />
         </TouchableOpacity>
-
       </SafeAreaView>
     </SafeAreaProvider>
   );
@@ -352,6 +352,5 @@ const styles = StyleSheet.create({
   bottonTable: {
     flexDirection: "row",
     gap: 15,
-    
   },
 });
