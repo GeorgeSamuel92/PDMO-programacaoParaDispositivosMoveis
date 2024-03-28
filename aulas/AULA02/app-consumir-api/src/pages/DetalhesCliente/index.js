@@ -1,15 +1,8 @@
 import React, { useState } from "react";
 import { StatusBar } from "expo-status-bar";
-import {
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-  Alert
-} from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView, TextInput, Alert,Button } from "react-native";
 
-import api from "./src/services/api/api";
+import api from "../../services/api/api";
 
 export default function App() {
   const [cliente, setCliente] = useState([]);
