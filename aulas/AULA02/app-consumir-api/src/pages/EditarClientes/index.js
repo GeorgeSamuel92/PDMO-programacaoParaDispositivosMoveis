@@ -17,6 +17,11 @@ export default function EditarCliente() {
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
 
+<<<<<<< HEAD
+=======
+ 
+
+>>>>>>> be92bb31f5552088b8ebb3978342a83f130ff1ef
   const handleShowAlert = () => {
     setShowAlert(true);
   };

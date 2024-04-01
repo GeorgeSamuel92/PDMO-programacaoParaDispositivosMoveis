@@ -165,7 +165,10 @@ export default function App() {
       );
     });
   };
+<<<<<<< HEAD
 
+=======
+>>>>>>> be92bb31f5552088b8ebb3978342a83f130ff1ef
   // função de edição do cliente
   const buttonPress = (nome) => {
     setInputText(nome);
@@ -265,8 +268,13 @@ export default function App() {
                           },
                         ]
                       );
+<<<<<<< HEAD
                     }}>
 
+=======
+                    }}
+                  >
+>>>>>>> be92bb31f5552088b8ebb3978342a83f130ff1ef
                     <FontAwesome6 name="trash" size={24} color="red" />
                   </TouchableOpacity>
                 </View>
@@ -304,7 +312,10 @@ export default function App() {
 /**
  * Estilização dos componentes
  */
+<<<<<<< HEAD
 
+=======
+>>>>>>> be92bb31f5552088b8ebb3978342a83f130ff1ef
 const styles = StyleSheet.create({
   androidSafeArea: {
     flex: 1,
